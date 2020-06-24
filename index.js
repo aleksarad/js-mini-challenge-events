@@ -1,30 +1,30 @@
 /***** Beginning of Starter Code ****/
 
-const playerContainer = document.querySelector(".player-container")
+const pokemonContainer = document.querySelector(".pokemon-container")
 
 // render one player to the DOM
-function renderPlayer(player) {
+function renderPokemon(pokemon) {
   // create an element for the outer div
-  const playerDiv = document.createElement("div")
+  const pokeDiv = document.createElement("div")
 
   // set attributes on the outer div
-  playerDiv.className = "player"
-  playerDiv.dataset.number = player.number
+  pokeDiv.className = "poke"
+  pokeDiv.dataset.number = pokemon.number
 
   // use innerHTML to create any child elements of the div
-  playerDiv.innerHTML = `
-    <h3>${player.name} (<em>${player.nickname}</em>)</h3>
-    <img src="${player.photo}" alt="${player.name}">
-    <p class="likes">${player.likes} likes</p>
+  pokeDiv.innerHTML = `
+    <h3>${pokemon.name} (<em>${pokemon.type}</em>) - ${pokemon.number}</h3>
+    <img src="${pokemon.photo}" alt="${pokemon.name}">
+    <p class="likes">${pokemon.likes} likes</p>
     <button class="like-button">❤️</button>
   `
 
   // append the element to the container
-  playerContainer.append(playerDiv)
+  pokemonContainer.append(pokeDiv)
 }
 
 // for each player in the array, render to the DOM
-PLAYERS.forEach(renderPlayer)
+POKEMON.forEach(renderPokemon)
 
 /***** End of Starter Code ****/
 
@@ -32,15 +32,56 @@ PLAYERS.forEach(renderPlayer)
 
 
 /***** Deliverable 1 *****/
+const h1 = document.querySelector("h1#header")
+h1.addEventListener("click", function(e) {
+  toggleColor(h1);
+})
+
 function toggleColor(element) {
-  if (element.style.color === "red") {
+  if (element.style.color === "pink") {
     element.style.color = "black"
   } else {
-    element.style.color = "red"
+    element.style.color = "pink"
   }
 }
 
 
 /***** Deliverable 2 *****/
+/** Adding a new Pokemon to the page! **/
+const pokemonForm = document.querySelector("#new-pokemon-form");
+
+pokemonForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  //extract input values and add them to pokemon object
+  const dexNum = pokemonForm.number;
+  const pokeName = pokemonForm.name;
+  const pokeType = pokemonForm.type;
+  const pokePhoto = pokemonForm.photo;
+
+
+  pokemon = {
+    number: dexNum.value,
+    name: pokeName.value,
+    type: pokeType.value,
+    photo: pokePhoto.value,
+    likes: 0
+  }
+
+  renderPokemon(pokemon)
+})
+
 
 /***** Deliverable 3 *****/
+pokemonContainer.addEventListener("click", function(e) {
+    //select the closest pokemon div to the clicked button
+    //it looks like you have to go up to the main parent, cant just say closes 'p' or '.likes'
+    //essentially going from the largest parent container down the tree toward target
+    const pokeDiv = e.target.closest(".poke");
+    //select likes WITHIN that div
+    const likes = pokeDiv.querySelector(".likes");
+    //add 1 on click
+    //parseInt isolates the num for us, otherwise textContent is a string
+    const increasedLike = parseInt(likes.textContent) + 1;
+    likes.textContent = `${increasedLike} likes`;
+})
